@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class HomePage extends StatefulWidget {
   @override
@@ -6,9 +9,19 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  String _search;
+  int _offset = 0;
 
-  _getSearch() async {
+  Future<Map> _getSearch() async {
+    http.Response response;
 
+    if(_search == null) {
+      response = await http.get("https://api.giphy.com/v1/gifs/trending?api_key=M6DIj6ctPBb5O9KJU0aUK8R1piDAUpgx&limit=20&rating=G");
+    }else {
+      response = await http.get("https://api.giphy.com/v1/gifs/search?api_key=M6DIj6ctPBb5O9KJU0aUK8R1piDAUpgx&q=$_search&limit=20&offset=$_offset&rating=G&lang=pt");
+    }
+
+    return json.decode(response.body);
   }
 
   @override
